@@ -1,4 +1,19 @@
 {
-    "todos": []
+  "todos": [
+    {
+      "title": "поесть",
+      "completed": false,
+      "id": 1
+    },
+    {
+      "title": "купить молоко",
+      "completed": false,
+      "id": 2
+    },
+    {
+      "title": "помыть пол",
+      "completed": false,
+      "id": 3
+    }
+  ]
 }
-

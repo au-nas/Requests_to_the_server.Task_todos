@@ -9,13 +9,17 @@ export const App = () => {
 	const [editingTextTodo, setEditingTextTodo] = useState('');
 	const [editingIdTodo, setEditingIdTodo] = useState(null);
 
+	const [search, setSearch] = useState('');
+
+	const [isSorted, setIsSorted] = useState(false);
+
 	useEffect(() => {
 		setIsLoading(true);
 
 		fetch('http://localhost:3003/todos')
 			.then((loadedData) => loadedData.json())
 			.then((loadedTodos) => {
-				setTodos(loadedTodos.slice(0, 15));
+				setTodos(loadedTodos);
 			})
 			.finally(() => setIsLoading(false));
 	}, []);
@@ -66,6 +70,22 @@ export const App = () => {
 			});
 	};
 
+	const deleteTodo = (id) => {
+		fetch(`http://localhost:3003/todos/${id}`, {
+			method: 'DELETE',
+		}).then(() => {
+			setTodos((prev) => prev.filter((todo) => todo.id !== id));
+		});
+	};
+
+	let filteredTodos = todos.filter((todo) =>
+		todo.title.toLowerCase().includes(search.toLowerCase()),
+	);
+
+	if (isSorted) {
+		filteredTodos = [...filteredTodos].sort((a, b) => a.title.localeCompare(b.title));
+	}
+
 	return (
 		<div className={styles.container}>
 			<h1 className={styles.title}>Список дел</h1>
@@ -73,8 +93,21 @@ export const App = () => {
 				<p>Загрузка...</p>
 			) : (
 				<>
+					<input
+						type="text"
+						value={search}
+						onChange={(e) => setSearch(e.target.value)}
+						placeholder="Поиск дела.."
+						className={styles.input}
+					/>
+					<button
+						onClick={() => setIsSorted(!isSorted)}
+						className={`${styles.button} ${styles.cancel}`}
+					>
+						{isSorted ? 'По порядку' : 'Сортировать по алфавиту'}
+					</button>
 					<ul className={styles.list}>
-						{todos.map((todo) => (
+						{filteredTodos.map((todo) => (
 							<li key={todo.id} className={styles.item}>
 								{/* {todo.title} */}
 								{editingIdTodo === todo.id ? (
@@ -109,6 +142,12 @@ export const App = () => {
 										>
 											Редактировать
 										</button>
+										<button
+											onClick={() => deleteTodo(todo.id)}
+											className={`${styles.button} ${styles.delete}`}
+										>
+											Удалить
+										</button>
 									</>
 								)}
 							</li>
@@ -122,7 +161,10 @@ export const App = () => {
 							placeholder="Новое дело.."
 							className={styles.input}
 						></input>
-						<button type="submit" className={`${styles.button} ${styles.add}`}>
+						<button
+							type="submit"
+							className={`${styles.button} ${styles.add}`}
+						>
 							Добавить
 						</button>
 					</form>
