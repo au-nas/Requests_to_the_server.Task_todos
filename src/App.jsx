@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
 import styles from './App.module.css';
+import { SearchBarLayout } from './components/SearchBarLayout';
+import { TodoListLayout } from './components/TodoListLayout';
+import { AddTodoFormLayout } from './components/AddTodoFormLayout';
 
 export const App = () => {
 	const [todos, setTodos] = useState([]);
@@ -93,81 +96,27 @@ export const App = () => {
 				<p>Загрузка...</p>
 			) : (
 				<>
-					<input
-						type="text"
-						value={search}
-						onChange={(e) => setSearch(e.target.value)}
-						placeholder="Поиск дела.."
-						className={styles.input}
+					<SearchBarLayout
+						search={search}
+						setSearch={setSearch}
+						isSorted={isSorted}
+						setIsSorted={setIsSorted}
 					/>
-					<button
-						onClick={() => setIsSorted(!isSorted)}
-						className={`${styles.button} ${styles.cancel}`}
-					>
-						{isSorted ? 'По порядку' : 'Сортировать по алфавиту'}
-					</button>
-					<ul className={styles.list}>
-						{filteredTodos.map((todo) => (
-							<li key={todo.id} className={styles.item}>
-								{/* {todo.title} */}
-								{editingIdTodo === todo.id ? (
-									<>
-										<input
-											type="text"
-											value={editingTextTodo}
-											onChange={(e) =>
-												setEditingTextTodo(e.target.value)
-											}
-											className={styles.input}
-										/>
-										<button
-											onClick={() => saveEdit(todo.id)}
-											className={`${styles.button} ${styles.save}`}
-										>
-											Сохранить
-										</button>
-										<button
-											onClick={cancelEdit}
-											className={`${styles.button} ${styles.cancel}`}
-										>
-											Отмена
-										</button>
-									</>
-								) : (
-									<>
-										<span>{todo.title}</span>
-										<button
-											onClick={() => startEdit(todo)}
-											className={`${styles.button} ${styles.edit}`}
-										>
-											Редактировать
-										</button>
-										<button
-											onClick={() => deleteTodo(todo.id)}
-											className={`${styles.button} ${styles.delete}`}
-										>
-											Удалить
-										</button>
-									</>
-								)}
-							</li>
-						))}
-					</ul>
-					<form onSubmit={requestAddTodo} className={styles.form}>
-						<input
-							type="text"
-							value={newTodo}
-							onChange={(e) => setNewTodo(e.target.value)}
-							placeholder="Новое дело.."
-							className={styles.input}
-						></input>
-						<button
-							type="submit"
-							className={`${styles.button} ${styles.add}`}
-						>
-							Добавить
-						</button>
-					</form>
+					<TodoListLayout
+						filteredTodos={filteredTodos}
+						editingIdTodo={editingIdTodo}
+						editingTextTodo={editingTextTodo}
+						setEditingTextTodo={setEditingTextTodo}
+						startEdit={startEdit}
+						saveEdit={saveEdit}
+						cancelEdit={cancelEdit}
+						deleteTodo={deleteTodo}
+					/>
+					<AddTodoFormLayout
+						newTodo={newTodo}
+						setNewTodo={setNewTodo}
+						requestAddTodo={requestAddTodo}
+					/>
 				</>
 			)}
 		</div>
