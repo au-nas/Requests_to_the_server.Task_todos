@@ -27,7 +27,7 @@ export const App = () => {
 			.finally(() => setIsLoading(false));
 	}, []);
 
-	const requestAddTodo = () => {
+	const requestAddTodo = (event) => {
 		event.preventDefault();
 
 		const title = newTodo.trim();
@@ -56,8 +56,8 @@ export const App = () => {
 		setEditingTextTodo('');
 	};
 
-	const saveEdit = (id) => {
-		const newTitle = editingTextTodo.trim();
+	const saveEdit = (id, title) => {
+		const newTitle = title.trim();
 
 		fetch(`http://localhost:3003/todos/${id}`, {
 			method: 'PATCH',

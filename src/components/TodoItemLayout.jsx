@@ -12,7 +12,6 @@ export const TodoItemLayout = ({
 }) => {
 	return (
 		<li key={todo.id} className={styles.item}>
-			
 			{editingIdTodo === todo.id ? (
 				<>
 					<input
@@ -22,7 +21,7 @@ export const TodoItemLayout = ({
 						className={styles.input}
 					/>
 					<button
-						onClick={() => saveEdit(todo.id)}
+						onClick={() => saveEdit(todo.id, editingTextTodo)}
 						className={`${styles.button} ${styles.save}`}
 					>
 						Сохранить
